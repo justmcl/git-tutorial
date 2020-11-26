@@ -1,5 +1,5 @@
 using System;
-using System.Timers
+using System.Timers;
 using System.IO;
 
 namespace tst{
@@ -11,13 +11,14 @@ namespace tst{
 			Console.Write(35);
 			private System.Timers.Timer mtimer0;
 			mtimer0 =new System.Timers.Timer(100);
-			mtimer0.Elapsed+=new ElapsedEventHandler(dosg)
-			mtimer0.AutoReset
+			mtimer0.Elapsed+=new ElapsedEventHandler(go);
+			mtimer0.AutoReset=true;
+			mtimer0.Enabled=true;
 		}
 
 		private void go()
 		{
-			
+			Console.WriteLine("gogogo");
 		}
 	}
 }
