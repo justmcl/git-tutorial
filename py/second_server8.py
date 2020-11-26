@@ -10,13 +10,13 @@ import math
 import datetime
 import jkzuc
 
-def creat_prog(dic):
+def creat_second(dic):
 	with open('second.ngc','w') as f1:
-		f1.writelines("#<vel> = "+str(dic['speed'])+"\n#<acc> = "+str(dic['acc'])+"\n#<tol> = 0.5\n#<do> = "+str(dic['do'])+"\n#<begindelay> = "+str(dic['begin_delay'])+"\n#<enddelay> = "+str(dic['end_delay'])+"\n\n")
+		f1.writelines("#<vel0> = "+str(dic['speed_down'])+"\n"+"#<acc0> = "+str(dic['acc_down'])+"\n"+"#<vel> = "+str(dic['speed'])+"\n#<acc> = "+str(dic['acc'])+"\n#<tol> = 0.4\n#<do> = "+str(dic['do'])+"\n#<begindelay> = "+str(dic['begin_delay'])+"\n#<enddelay> = "+str(dic['end_delay'])+"\n\n")
 		f1.writelines("#<pos> = {"+str(dic['points'][0][0])+","+str(dic['points'][0][1])+","+str(dic['points'][0][2]+dic['height'])+","+str(dic['points'][0][3])+","+str(dic['points'][0][4])+","+str(dic['points'][0][5])+"}\n")
-		f1.writelines("movl(#<pos>, 0, #<vel>, #<acc>, #<tol>)\n")
+		f1.writelines("movl(#<pos>, 0, #<vel0>, #<acc0>, #<tol>)\n")
 		f1.writelines("#<pos> = {"+str(dic['points'][0][0])+","+str(dic['points'][0][1])+","+str(dic['points'][0][2])+","+str(dic['points'][0][3])+","+str(dic['points'][0][4])+","+str(dic['points'][0][5])+"}\n")
-		f1.writelines("movl(#<pos>, 0, #<vel>, #<acc>, #<tol>)\n")
+		f1.writelines("movl(#<pos>, 0, #<vel0>, #<acc0>, #<tol>)\n")
 		f1.writelines("setdout(0,#<do>,1,1)\n")
 		f1.writelines("sleep(#<begindelay>)\n\n")
 		for point in dic['points']:
@@ -27,7 +27,7 @@ def creat_prog(dic):
 		f1.writelines("sleep(#<enddelay>)\n")
 		f1.writelines("setdout(0,#<do>,0,1)\n")
 		f1.writelines("#<pos> = {"+str(dic['points'][-1][0])+","+str(dic['points'][-1][1])+","+str(dic['points'][-1][2]+dic['height'])+","+str(dic['points'][-1][3])+","+str(dic['points'][-1][4])+","+str(dic['points'][-1][5])+"}\n")
-		f1.writelines("movl(#<pos>, 0, #<vel>, #<acc>, #<tol>)\n")
+		f1.writelines("movl(#<pos>, 0, #<vel0>, #<acc0>, #<tol>)\n")
 		f1.writelines("M2\n")
 
 
@@ -72,33 +72,6 @@ def run_prog(filePath):
 	    print "run complete"
 
 
-
-
-def run_first():
-	if __name__ == '__main__':
-	    c.teleop_enable(0)
-	    c.wait_complete()
-	    s.poll()
-	    for jnum in range(0, 6):
-		if not (s.homed[jnum]):
-		    c.home(-1)
-		    c.wait_complete()
-		    break
-	    # open the file
-	    c.task_plan_synch()
-	    c.wait_complete()
-	    filePath = '/home/jakauser/first.ngc'
-	    c.program_open(filePath)
-	    # ensure the mode
-	    s.poll()
-	    if s.task_mode != jkzuc.MODE_AUTO:
-			c.mode(jkzuc.MODE_AUTO)  # task_mode
-			c.wait_complete()
-			s.poll()
-	    c.auto(jkzuc.AUTO_RUN, 0)
-
-
-
 def sendmsg():
 	s.poll()
 	list0=s.position
@@ -115,16 +88,24 @@ def wait_move():
 		dic = json.loads(Data,strict=False) #得到字典
 		if dic['command']=='move':
 			print '接收到数据'
-		creat_prog(dic)
-		time.sleep(0.1)
-		filePath = '/home/jakauser/second.ngc'
-		print "##########curve"
-		run_prog(filePath)
-		#time.sleep(10)
-		if(dic['complete']==0):
-			dataSocket.sendall("NEXT".encode())
-		else:
+			creat_second(dic)
+			time.sleep(0.1)
+			filePath = '/home/jakauser/second.ngc'
+			print "##########curve"
+			c.set_digital_output(0,2,0)
+
+			run_prog(filePath)
+			#time.sleep(10)
+			if(dic['complete']==0):
+				dataSocket.sendall("NEXT".encode())
+			else:
+				break
+		elif dic['command']=="skip":
+			c.set_digital_output(0,2,0)
 			break
+
+
+
 
 
 def arraymove(dic):
@@ -158,6 +139,7 @@ def arraymove(dic):
 				filePath = '/home/jakauser/first.ngc'
 				print "############array"
 				run_prog(filePath)
+				c.set_digital_output(0,2,1)
 				#time.sleep(5)
 				sendmsg()
 				wait_move()
@@ -172,6 +154,7 @@ def arraymove(dic):
 				print "############array"
 				run_prog(filePath)
 				#time.sleep(5)
+				c.set_digital_output(0,2,1)
 				sendmsg()
 				wait_move()	
 
@@ -183,8 +166,8 @@ s = jkzuc.stat()
 listenSocket = socket.socket()         # 创建 socket 对象
 host = socket.gethostname() # 获取本地主机名
 print host
-port = 12345      # 设置端口
-listenSocket.bind(('192.168.218.132', port))
+port = 12346      # 设置端口
+listenSocket.bind(('192.168.1.101', port))
 listenSocket.listen(10)
 print 'Waitting for connect...'
 dataSocket,addr = listenSocket.accept()     # 建立客户端连接
@@ -207,7 +190,7 @@ while True:
 	elif dic['command']=='move':
 		print '接收到数据,move'
 
-		creat_prog(dic)
+		creat_second(dic)
 		time.sleep(0.1)
 		filePath = '/home/jakauser/second.ngc'
 		run_prog(filePath)
