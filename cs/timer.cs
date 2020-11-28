@@ -18,7 +18,7 @@ namespace tst {
 		}
 
 		public static void go (object o, ElapsedEventArgs e) {
-			int a = 666 * 666;
+			int i=0;
 			Console.ForegroundColor = ConsoleColor.Red;
 			Console.WriteLine ("gogogo");
 			Console.WriteLine (a);
