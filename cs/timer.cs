@@ -14,14 +14,15 @@ namespace tst {
 			mtimer1.Elapsed += new ElapsedEventHandler (go);
 			mtimer1.AutoReset = true;
 			mtimer1.Enabled = true;
-			Thread.Sleep (3000)
+			Thread.Sleep (3000);
 		}
 
 		public static void go (object o, ElapsedEventArgs e) {
 			int i=0;
 			Console.ForegroundColor = ConsoleColor.Red;
 			Console.WriteLine ("gogogo");
-			Console.WriteLine (a);
+			Console.WriteLine (i);
+			Console.WriteLine(Thread.CurrentThread.Name);
 		}
 	}
 }
