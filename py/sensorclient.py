@@ -26,13 +26,9 @@ while True:
     elif toSend.rstrip()=="g" :
         jssend=js1
 
-<<<<<<< HEAD
     dataSocket.send(jssend.encode())
-=======
-    dataSocket.send(jssend.encode())
->>>>>>> e2e19c235fee68f922002862de87d7caf42b74e0
     received = dataSocket.recv(512000)
     revstr = received.decode()
     print(revstr)
-
+    
 dataSocket.close()
