@@ -10,23 +10,27 @@ jssend=""
 dataSocket.connect(("192.168.1.101", port))
 
 while True:
-    toSend=input('??').encode()
+    toSend=input('??')
     if toSend.rstrip()=="s0" :
-        dict=json.loads(js0)
+        dict0=json.loads(js0)
         dict0["compliance_type"]=0
-        jssend=dict.dumps(dict0)
+        jssend=json.dumps(dict0)
     elif toSend.rstrip()=="s10" :
-        dict=json.loads(js0)
+        dict0=json.loads(js0)
         dict0["compliance_type"]=1
-        jssend=dict.dumps(dict0)
+        jssend=json.dumps(dict0)
     elif toSend.rstrip()=="s20" :
-        dict=json.loads(js0)
+        dict0=json.loads(js0)
         dict0["compliance_type"]=2
-        jssend=dict.dupms(jso)
+        jssend=json.dumps(js0)
     elif toSend.rstrip()=="g" :
         jssend=js1
 
-    dataSocket.send(jssend.encode(g))
+<<<<<<< HEAD
+    dataSocket.send(jssend.encode())
+=======
+    dataSocket.send(jssend.encode())
+>>>>>>> e2e19c235fee68f922002862de87d7caf42b74e0
     received = dataSocket.recv(512000)
     revstr = received.decode()
     print(revstr)
