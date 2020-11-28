@@ -4,25 +4,41 @@ using System.Threading;
 using System.Timers;
 namespace tst {
 	public class pro {
-		int a = 666;
+		public int a = 0;
 		public static void Main () {
 			Console.WriteLine ("hello,mono");
-			Console.Write (35 + "\n");
-
+			dog kit = new dog ();
+			Thread.Sleep (10000);
+		}
+	}
+	public class dog {
+		public int age = 0;
+		public int number=0;
+		public dog () {
 			System.Timers.Timer mtimer1;
-			mtimer1 = new System.Timers.Timer (100);
+			mtimer1 = new System.Timers.Timer (500);
 			mtimer1.Elapsed += new ElapsedEventHandler (go);
 			mtimer1.AutoReset = true;
 			mtimer1.Enabled = true;
-			Thread.Sleep (3000);
 		}
-
-		public static void go (object o, ElapsedEventArgs e) {
-			int i=0;
+		public void go (object o, ElapsedEventArgs e) {
+			//int j = 0;
 			Console.ForegroundColor = ConsoleColor.Red;
-			Console.WriteLine ("gogogo");
-			Console.WriteLine (i);
-			Console.WriteLine(Thread.CurrentThread.Name);
+			age++;
+			number++;
+			//Console.WriteLine (age);
+			//age++;
+			//Console.WriteLine ("gogogo");
+			//Console.WriteLine (j);
+			//Console.WriteLine(Thread.CurrentThread.Name);
+			int mnum=number;
+			for (int i = 0; i <100; i++) {
+				//for (int j = 0; j < mnum; j++) {
+				//	Console.Write (" ");
+				//}
+				Thread.Sleep (100);
+				Console.WriteLine ("({0},{1})",mnum,i);
+			}
 		}
 	}
 }
