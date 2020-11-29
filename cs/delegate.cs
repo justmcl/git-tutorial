@@ -7,14 +7,46 @@ namespace delegateTest {
     class Program {
         static void Main (string[] args) {
 
-#if de0 //Func<>,Action<>和自定义委托;
+#if de0 //Func<>,Action<>和自定义delegate;
 
-            Cal Cal1 = new Cal ();
-            Action action = new Action (Cal1.Report);
+            Cal caler1 = new Cal ();
+
+            Del del1 = new Del (caler1.Add);
+            Del del2 = new Del (caler1.Sub);
+            Del del3 = new Del (caler1.Mul);
+            Del del4 = new Del (caler1.Div);
+            //Del del41 = calr1.Div;
+            //Del del42 = delegate (int x, int y) { return x / y; };//匿名方法
+            //Del del43 = (int x, int y) =>{ return x / y; }; //lambda表达式
+            //Del del44 =  (x,y) => { return x / y; };//lambda表达式
+            //Del del45 = (x, y) => x / y; //lambda表达式
+
+            int a = 8;
+            int b = 3;
+            int c = 0;
+
+            c = del1.Invoke (a, b);
+            Console.WriteLine (c);
+            c = del1 (a, b);
+            Console.WriteLine (c);
+            c = del2 (a, b);
+            Console.WriteLine (c);
+            c = del3 (a, b);
+            Console.WriteLine (c);
+            c = del4 (b, a);
+            Console.WriteLine (c);
+
+            Thread.Sleep(1500);
+
+
+            Action action = new Action (caler1.Report);
             action.Invoke ();
             action ();
-            Func<int, int, int> func1 = new Func<int, int, int> (Cal1.Add);
-            Func<int, int, int> func2 = new Func<int, int, int> (Cal1.Sub);
+
+            Thread.Sleep (1500);
+
+            Func<int, int, int> func1 = new Func<int, int, int> (caler1.Add);
+            Func<int, int, int> func2 = new Func<int, int, int> (caler1.Sub);
             int x = 100;
             int y = 200;
             int z = x;
@@ -28,50 +60,26 @@ namespace delegateTest {
             Console.WriteLine (z);
 
             Type t = typeof (Action);
-            Console.WriteLine (t.IsClass);
-            Cal calr1 = new Cal ();
 
-            Del del1 = new Del (calr1.Add);
-            Del del2 = new Del (calr1.Sub);
-            Del del3 = new Del (calr1.Mul);
-            Del del4 = new Del (calr1.Div);
-            //Del del41 = calr1.Div;
-            //Del del42 = delegate (int x, int y) { return x / y; };//匿名方法
-            //Del del43 = (int x, int y) =>{ return x / y; }; //lambda表达式
-            //Del del44 =  (x,y) => { return x / y; };//lambda表达式
-            //Del del45 = (x, y) => x / y; //lambda表达式
+            Console.WriteLine ("the name of t: {0}",t.Name);
+            Console.WriteLine ("t is a class: {0}",t.IsClass);
 
-            int a = 8;
-            int b = 3;
-            int c = 0;
-
-            c = del1.Invoke (a, b);
-            Console.WriteLine (c);
-
-            c = del1 (a, b);
-            Console.WriteLine (c);
-            c = del2 (a, b);
-            Console.WriteLine (c);
-            c = del3 (a, b);
-            Console.WriteLine (c);
-            c = del4 (b, a);
-            Console.WriteLine (c);
 #endif
 
 #if de1 //milk and apple,模板方法和回调方法；
 
-            //WrapFcatory wf = new WrapFcatory();
-            //ProductFactory pf = new ProductFactory();
-            //Logger lgr1 = new Logger();
-            //Func<Product> func1 = new Func<Product>(pf.MakeMilk);
-            //Func<Product> func2 = new Func<Product>(pf.MakeApple);
-            //Action<Product> act1 = new Action<Product>(lgr1.Log);
+            WrapFcatory wf = new WrapFcatory();
+            ProductFactory pf = new ProductFactory();
+            Logger lgr1 = new Logger();
+            Func<Product> func1 = new Func<Product>(pf.MakeMilk);
+            Func<Product> func2 = new Func<Product>(pf.MakeApple);
+            Action<Product> act1 = new Action<Product>(lgr1.Log);
 
-            //Box box1 = wf.WrapProduct(func1, act1);
-            //Box box2 = wf.WrapProduct(func2, act1);
+            Box box1 = wf.WrapProduct(func1, act1);
+            Box box2 = wf.WrapProduct(func2, act1);
 
-            //Console.WriteLine(box1.product.Name);
-            //Console.WriteLine(box2.product.Name);
+            Console.WriteLine(box1.product.Name);
+            Console.WriteLine(box2.product.Name);
 
 #endif
 
