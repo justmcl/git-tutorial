@@ -1,4 +1,4 @@
-﻿#define de0
+﻿#define de0//宏定义
 using System;
 using System.Threading;
 
