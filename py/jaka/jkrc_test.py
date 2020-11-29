@@ -16,7 +16,7 @@ print(sys.path)
 
 
 import jkrc
-robot = jkrc.RC("192.168.2.64")#返回一个机器人对象,此IP需要替换成自己使用的机器人IP
+robot = jkrc.RC("192.168.1.101")#返回一个机器人对象,此IP需要替换成自己使用的机器人IP
 robot.login()  #登录
 ret = robot.get_joint_position()
 if ret[0] == 0:
