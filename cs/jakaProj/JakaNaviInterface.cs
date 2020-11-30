@@ -1,4 +1,5 @@
-﻿using System;
+﻿#define fstream
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -6,9 +7,45 @@ using System.Threading;
 using System.Timers;
 //using System.Data;
 using System.IO;
-//using System.
 
 namespace jakatest2 {
+
+#if fstream
+    class prog {
+        static void Main () {
+            Stream s = new FileStream ("text.txt", FileMode.Create);
+            try {
+                Console.WriteLine ("Read: {0}", s.CanRead);
+                Console.WriteLine ("Write: {0}", s.CanWrite);
+                Console.WriteLine ("Seek: {0}", s.CanSeek);
+                s.WriteByte (101);
+                s.WriteByte (102);
+                byte[] block = { 1, 2, 3, 4, 5 };
+                s.Write (block, 0, block.Length);
+                Console.WriteLine (s.Length);
+                string sFilePath = "~/" + DateTime.Now.ToString ("yyyyMM");
+                string sFileName = "rizhi" + DateTime.Now.ToString ("dd") + ".log";
+                sFileName = sFilePath + "/" + sFileName; //文件的绝对路径
+                Console.WriteLine (sFileName);
+            } finally {
+                if (s != null) {
+                    ((IDisposable) s).Dispose ();
+                }
+            }
+
+            Thread.Sleep (1000);
+
+            using (Stream ss = new FileStream ("text.txt ", FileMode.Create)) {
+                Console.WriteLine ("Read: { 0 }", ss.CanRead);
+                Console.WriteLine ("Write: { 0 }", ss.CanWrite);
+                Console.WriteLine ("Seek: { 0 }", ss.CanSeek);
+            }
+        }
+    }
+
+#endif
+
+#if frw
     class Prog {
         static void Main (string[] args) {
             Console.WriteLine ("please write your file name");
@@ -17,12 +54,14 @@ namespace jakatest2 {
             Console.WriteLine (filename);
             Console.WriteLine ("write something");
             string filecont = Console.ReadLine ();
-            if (!File.Exists (filename)|| true) {
-                File.WriteAllText (filename,filecont,Encoding.Default );
+            if (!File.Exists (filename) || true) {
+                File.WriteAllText (filename, filecont, Encoding.Default);
                 //string text=File.ReadAllText(filename,Encoding.Default);
             }
         }
     }
+#endif
+
 #if jaka
     #region interface /**********/
 
