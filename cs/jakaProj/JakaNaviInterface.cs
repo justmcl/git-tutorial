@@ -35,12 +35,41 @@ namespace jakatest2 {
 
             Thread.Sleep (1000);
 
-            using (Stream ss = new FileStream ("text.txt ", FileMode.Create)) {
-                Console.WriteLine ("Read: { 0 }", ss.CanRead);
-                Console.WriteLine ("Write: { 0 }", ss.CanWrite);
-                Console.WriteLine ("Seek: { 0 }", ss.CanSeek);
+            using (Stream ss = new FileStream ("text.txt", FileMode.Create)) {
+                Console.WriteLine ("Read: {0}", ss.CanRead);
+                Console.WriteLine ("Write: {0}", ss.CanWrite);
+                Console.WriteLine ("Seek: {0}", ss.CanSeek);
             }
+
+            WriteLog ("i have a apple");
         }
+
+        public static void WriteLog (string strLog) {
+            string sFilePath = "root/" + DateTime.Now.ToString ("yyyyMM");
+            string sFileName = "rizhi " + DateTime.Now.ToString ("dd") + ".log ";
+            sFileName = sFilePath + "/" + sFileName; //文件的绝对
+            if (!Directory.Exists (sFilePath)) //验证路径是否存在
+            {
+                Directory.CreateDirectory (sFilePath);
+                //不存在则创建
+            }
+            FileStream fs;
+            StreamWriter sw;
+            if (File.Exists (sFileName))
+            //验证文件是否存在，有则追加，无则创建
+            {
+                fs = new FileStream (sFileName, FileMode.Append, FileAccess.Write);
+            } else {
+                fs = new FileStream (sFileName, FileMode.Create, FileAccess.Write);
+            }
+            sw = new StreamWriter (fs);
+            //sw.WriteLine (DateTime.Now.ToString ("yy-MM-dd HH-mm-ss") + "---" + strLog);
+            sw.WriteLine (DateTime.Now.ToString ("HH/mm/ss") + "---" + strLog);
+
+            sw.Close ();
+            fs.Close ();
+        }
+
     }
 
 #endif
