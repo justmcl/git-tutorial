@@ -11,7 +11,11 @@ using System.IO;
 namespace jakatest2 {
 
 #if fstream
+    public delegate void debugTest (string info);
+
     class prog {
+        static string pathfile = Environment.CurrentDirectory + "\\J600SCPI_Test.txt";
+
         static void Main () {
             Stream s = new FileStream ("text.txt", FileMode.Create);
             try {
@@ -42,8 +46,48 @@ namespace jakatest2 {
             }
 
             WriteLog ("i have a apple");
+
+            Thread wLogThread0 = new Thread (wlog1);
+            wLogThread0.Start ();
+            Thread wLogThread1 = new Thread (wlog2);
+            wLogThread1.Start ();
+            Thread.Sleep (10000);
+
+            //debug_test.BeginInvoke ("开始", null, null);
+            //Console.WriteLine(pathfile);
+
+        }
+        static private void wlog1 (object o) {
+            debugTest debug_test = new debugTest (debugout);
+            for (int i = 0; i < 100; i++) {
+                //WriteLog ("she is yellow");
+                debug_test.BeginInvoke ("开始" + i, null, null);
+            }
         }
 
+        static private void wlog2 (object o) {
+            for (int i = 0; i < 100; i++) {
+                debugTest debug_test = new debugTest (debugout);
+                //WriteLog ("boom!!!!!!!!!");
+                debug_test.BeginInvoke ("cheer" + i, null, null);
+            }
+        }
+        public void debugout (string info) {
+            try {
+                string outinfo = DateTime.Now.ToString () + "\t" + info + "\r\n";
+                if (File.Exists (pathfile)) {
+                    StreamWriter filewrite = File.AppendText (pathfile);
+                    filewrite.Write (outinfo);
+                    filewrite.Close ();
+                } else {
+                    StreamWriter filewrite = File.CreateText (pathfile);
+                    filewrite.Write (outinfo);
+                    filewrite.Close ();
+                }
+            } catch (Exception ex) {
+                Functions.Print (ex);
+            }
+        }
         public static void WriteLog (string strLog) {
             string sFilePath = "root/" + DateTime.Now.ToString ("yyyyMM");
             string sFileName = "rizhi " + DateTime.Now.ToString ("dd") + ".log ";
@@ -64,14 +108,12 @@ namespace jakatest2 {
             }
             sw = new StreamWriter (fs);
             //sw.WriteLine (DateTime.Now.ToString ("yy-MM-dd HH-mm-ss") + "---" + strLog);
-            sw.WriteLine (DateTime.Now.ToString ("HH/mm/ss") + "---" + strLog);
+            sw.WriteLine (DateTime.Now.ToString ("HH/mm/ss") + "-> " + strLog);
 
             sw.Close ();
             fs.Close ();
         }
-
     }
-
 #endif
 
 #if frw

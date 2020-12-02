@@ -1,4 +1,4 @@
-﻿#define de0//宏定义
+﻿#define de2//宏定义
 using System;
 using System.Threading;
 
@@ -8,40 +8,35 @@ namespace delegateTest {
         static void Main (string[] args) {
 
 #if de0 //Func<>,Action<>和自定义delegate;
-
+/*
+预定义委托，Func<t>有返回值，Action无返回值
+*/
             Cal caler1 = new Cal ();
 
             Del del1 = new Del (caler1.Add);
             Del del2 = new Del (caler1.Sub);
             Del del3 = new Del (caler1.Mul);
             Del del4 = new Del (caler1.Div);
-            //Del del41 = calr1.Div;
+            Del del5 = new Del (caler1.Div);
+            Del del41 = calr1.Div;
             //Del del42 = delegate (int x, int y) { return x / y; };//匿名方法
             //Del del43 = (int x, int y) =>{ return x / y; }; //lambda表达式
             //Del del44 =  (x,y) => { return x / y; };//lambda表达式
             //Del del45 = (x, y) => x / y; //lambda表达式
-
-            int a = 8;
-            int b = 3;
-            int c = 0;
-
+            int a=8,b=3,c=0;
             c = del1.Invoke (a, b);
             Console.WriteLine (c);
             c = del1 (a, b);
             Console.WriteLine (c);
-            c = del2 (a, b);
-            Console.WriteLine (c);
-            c = del3 (a, b);
-            Console.WriteLine (c);
-            c = del4 (b, a);
-            Console.WriteLine (c);
 
             Thread.Sleep(1500);
 
-
             Action action = new Action (caler1.Report);
+            Action<int> action0 = new Action<int> (caler1.Report);
             action.Invoke ();
             action ();
+            action0.Invoke(10086);
+            action0(10086+1);
 
             Thread.Sleep (1500);
 
@@ -59,7 +54,7 @@ namespace delegateTest {
             z = func2 (x, y);
             Console.WriteLine (z);
 
-            Type t = typeof (Action);
+            Type t = typeof (Del);
 
             Console.WriteLine ("the name of t: {0}",t.Name);
             Console.WriteLine ("t is a class: {0}",t.IsClass);
@@ -110,8 +105,9 @@ namespace delegateTest {
 
             for (int i = 0; i < 15; i++) {
                 Thread.Sleep (500);
-                Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.WriteLine ("tick {0}", i);
+                Console.ForegroundColor = ConsoleColor.Magenta;
+
             }
 
 #endif
@@ -120,6 +116,9 @@ namespace delegateTest {
     class Cal {
         public void Report () {
             Console.WriteLine ("have three");
+        }
+        public void Report (int num) {
+            Console.WriteLine ("have {0}",num);
         }
         public int Add (int x, int y) {
             return x + y;
@@ -177,8 +176,9 @@ namespace delegateTest {
         public void DoHomework () {
             for (int i = 0; i < 4; i++) {
                 Thread.Sleep (500);
-                Console.ForegroundColor = this.cc;
                 Console.WriteLine ("Student{0} has done homework for {1} hours", this.ID, i);
+                Console.ForegroundColor = this.cc;
+
             }
         }
     }
